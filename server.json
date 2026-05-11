@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.bfl/mcp",
+  "title": "FLUX",
+  "description": "Generate, edit, vary, and browse FLUX images from any MCP-compatible client. All FLUX.2 models (Pro, Max, Klein, Flex) via OAuth — no API keys to manage. From Black Forest Labs.",
+  "version": "1.0.0",
+  "websiteUrl": "https://docs.bfl.ai/api_integration/mcp_integration",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.bfl.ai"
+    }
+  ]
+}
