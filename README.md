@@ -86,7 +86,7 @@ A browser opens on first use for OAuth. Tokens refresh automatically.
 <summary><strong>Codex</strong></summary>
 
 ```bash
-codex mcp add flux --url https://mcp.bfl.ai/
+codex mcp add flux --url https://mcp.bfl.ai
 codex mcp login flux
 ```
 
@@ -94,7 +94,7 @@ Or append to `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.flux]
-url = "https://mcp.bfl.ai/"
+url = "https://mcp.bfl.ai"
 ```
 
 </details>
@@ -283,7 +283,7 @@ For the full FLUX prompting playbook, see [black-forest-labs/skills](https://git
 - **Codex:** `codex mcp login flux`. Full rebuild:
   ```bash
   codex mcp remove flux
-  codex mcp add flux --url https://mcp.bfl.ai/
+  codex mcp add flux --url https://mcp.bfl.ai
   ```
 - **mcp-remote clients:** `rm -rf ~/.mcp-auth` and restart the client to force a fresh OAuth.
 
