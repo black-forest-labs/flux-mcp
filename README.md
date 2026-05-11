@@ -322,20 +322,6 @@ Disconnect the FLUX connector in your client and reconnect it. The OAuth flow wi
 
 ---
 
-## Registry
-
-This server is published to the official **[MCP Registry](https://registry.modelcontextprotocol.io)** as **`ai.bfl/mcp`**. From there it auto-syncs to every major MCP directory:
-
-- **[github.com/mcp/ai.bfl/mcp](https://github.com/mcp/ai.bfl/mcp)** — the GitHub MCP Registry
-- **[glama.ai](https://glama.ai)**
-- **[mcp.so](https://mcp.so)**
-- **[pulsemcp.com](https://pulsemcp.com)**
-- **[Smithery](https://smithery.ai)**, [LobeHub](https://lobehub.com/mcp), and other aggregators
-
-See [`server.json`](./server.json) for the registry entry.
-
----
-
 ## Agent Skills (companion repo)
 
 MCP and Agent Skills solve different problems:
