@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: BFL API or model issues (not MCP)
+    url: https://help.bfl.ai
+    about: For bugs with the FLUX API itself, model output quality, billing, or your BFL account.
+  - name: BFL status
+    url: https://status.bfl.ai
+    about: Check here first for outage or degraded-service incidents on mcp.bfl.ai.
+  - name: FLUX prompting best practices
+    url: https://github.com/black-forest-labs/skills
+    about: Tips for getting better results from FLUX models.

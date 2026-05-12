@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an improvement or new capability
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like FLUX MCP to do?
+      placeholder: "Describe the feature, the use case, and (if relevant) which MCP client you want it in."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+      description: What's the workflow this unlocks or the friction it removes?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered

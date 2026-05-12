@@ -1,0 +1,72 @@
+name: Bug report
+description: Something broken with the FLUX MCP server or its docs
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. This repo tracks the **FLUX MCP server** (`https://mcp.bfl.ai`) and its install/docs surface.
+
+        - For issues with the underlying **FLUX API or models**, file at [docs.bfl.ai](https://docs.bfl.ai) / [help.bfl.ai](https://help.bfl.ai) instead.
+        - For **status incidents** (server unreachable, OAuth down), check [status.bfl.ai](https://status.bfl.ai) first.
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: MCP client
+      description: Which client are you using FLUX MCP from?
+      options:
+        - Claude Desktop
+        - Claude.ai
+        - Claude Code
+        - Cursor
+        - Codex
+        - Windsurf
+        - mcp-remote (stdio bridge)
+        - Other (please describe in "What happened?")
+    validations:
+      required: true
+
+  - type: input
+    id: client-version
+    attributes:
+      label: Client version
+      placeholder: "e.g. Claude Desktop 1.4.2, Cursor 0.45.x"
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "macOS 14.5, Windows 11, Ubuntu 24.04, ..."
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, what happened instead, and how can we reproduce it?
+      placeholder: |
+        Steps:
+        1. Added FLUX in Cursor with `https://mcp.bfl.ai`
+        2. Asked it to generate an image
+        3. Got error X
+
+        Expected: image generated
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error message / logs
+      description: Paste any error message, MCP log output, or screenshot.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I'm signed in to FLUX (OAuth completed) and my BFL organization has credits.
+        - label: I've tried disconnecting and reconnecting the connector.
+        - label: I've checked [status.bfl.ai](https://status.bfl.ai) and there's no active incident.
