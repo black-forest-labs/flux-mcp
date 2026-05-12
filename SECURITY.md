@@ -7,7 +7,7 @@ the OAuth flow, or anything in this repository — **please don't open a public
 GitHub issue**.
 
 Report it privately via GitHub's [Security Advisories](https://github.com/black-forest-labs/flux-mcp/security/advisories/new),
-or email `security@blackforestlabs.ai`.
+or email `support@blackforestlabs.ai`.
 
 We'll acknowledge receipt within 3 business days and keep you posted as we
 investigate and ship a fix.
