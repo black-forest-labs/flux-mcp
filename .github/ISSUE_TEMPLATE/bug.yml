@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for reporting a bug. This repo tracks the **FLUX MCP server** (`https://mcp.bfl.ai`) and its install/docs surface.
 
-        - For issues with the underlying **FLUX API or models**, file at [docs.bfl.ai](https://docs.bfl.ai) / [help.bfl.ai](https://help.bfl.ai) instead.
+        - For issues with the underlying **FLUX API or models**, see [docs.bfl.ai](https://docs.bfl.ai).
         - For **status incidents** (server unreachable, OAuth down), check [status.bfl.ai](https://status.bfl.ai) first.
 
   - type: dropdown

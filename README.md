@@ -341,10 +341,9 @@ Use both. They complement each other.
 
 ## Links
 
-- **Docs** — [docs.bfl.ai/api_integration/mcp_integration](https://docs.bfl.ai/api_integration/mcp_integration)
+- **Docs** — [docs.bfl.ai](https://docs.bfl.ai)
 - **Pricing** — [bfl.ai/pricing](https://bfl.ai/pricing)
-- **Help Center** — [help.bfl.ai](https://help.bfl.ai)
-- **API Status** — [status.bfl.ai](https://status.bfl.ai)
+- **Status** — [status.bfl.ai](https://status.bfl.ai)
 - **Black Forest Labs** — [bfl.ai](https://bfl.ai)
 
 ---
