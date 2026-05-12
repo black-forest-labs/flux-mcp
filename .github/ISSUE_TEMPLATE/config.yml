@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: BFL status
+    url: https://status.bfl.ai
+    about: Check here first for outage or degraded-service incidents on mcp.bfl.ai.
+  - name: FLUX prompting best practices
+    url: https://github.com/black-forest-labs/skills
+    about: Tips for getting better results from FLUX models.

@@ -29,6 +29,10 @@
   <a href="#troubleshooting">Troubleshooting</a>
 </p>
 
+<p align="center">
+  <video src="https://github.com/black-forest-labs/flux-mcp/raw/main/assets/demo.mp4" controls width="100%"></video>
+</p>
+
 ---
 
 The **FLUX MCP server** exposes the full FLUX.2 toolkit — text-to-image, image editing, multi-reference composition, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
@@ -337,10 +341,9 @@ Use both. They complement each other.
 
 ## Links
 
-- **Docs** — [docs.bfl.ai/api_integration/mcp_integration](https://docs.bfl.ai/api_integration/mcp_integration)
+- **Docs** — [docs.bfl.ai](https://docs.bfl.ai)
 - **Pricing** — [bfl.ai/pricing](https://bfl.ai/pricing)
-- **Help Center** — [help.bfl.ai](https://help.bfl.ai)
-- **API Status** — [status.bfl.ai](https://status.bfl.ai)
+- **Status** — [status.bfl.ai](https://status.bfl.ai)
 - **Black Forest Labs** — [bfl.ai](https://bfl.ai)
 
 ---
