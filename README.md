@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://registry.modelcontextprotocol.io/?q=ai.bfl%2Fmcp"><img alt="MCP Registry" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.modelcontextprotocol.io%2Fv0.1%2Fservers%2Fai.bfl%252Fmcp%2Fversions%2Flatest&query=%24.server.version&label=MCP%20Registry&logo=modelcontextprotocol&color=b9b5d0"></a>
+  <a href="https://registry.modelcontextprotocol.io/?q=io.github.black-forest-labs%2Fflux-mcp"><img alt="MCP Registry" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.modelcontextprotocol.io%2Fv0.1%2Fservers%2Fio.github.black-forest-labs%252Fflux-mcp%2Fversions%2Flatest&query=%24.server.version&label=MCP%20Registry&logo=modelcontextprotocol&color=b9b5d0"></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-07130e.svg"></a>
   <a href="https://docs.bfl.ai/api_integration/mcp_integration"><img alt="Docs" src="https://img.shields.io/badge/Docs-docs.bfl.ai-07130e"></a>
 </p>
