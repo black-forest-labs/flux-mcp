@@ -35,7 +35,7 @@
 
 ---
 
-The **FLUX MCP server** exposes the full FLUX.2 toolkit — text-to-image, image editing, multi-reference composition, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
+The **FLUX MCP server** exposes the full FLUX.2 toolkit — text-to-image, image editing, multi-reference composition, virtual try-on, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, try garments on a photo, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
 
 - **Hosted, remote, OAuth-only.** Connect to `https://mcp.bfl.ai`. Sign in with your BFL account, pick the org to bill — done.
 - **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
@@ -195,6 +195,7 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | Tool | What it does |
 | --- | --- |
 | `generate_image` | Generate **1–8 images in parallel**. Covers text-to-image, edits, multi-reference composition, style transfer, inpainting-style edits, and outpainting — all through prompts. |
+| `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Preserves face, hair, and pose; only the worn item changes. |
 | `generate_variations` | Produce N more images **in the same direction** as a previous generation (identified by `request_id`). Defaults to 4, max 8. |
 | `get_history` | List recent generations as a **thumbnail grid** with per-tile Variations / Edit / copy / download actions. Keyset pagination, date filters. |
 | `get_credits` | Return your remaining BFL credit balance. |
@@ -211,7 +212,7 @@ Available on `generate_image`:
 | `flux2_klein_4b` | Fastest option |
 | `flux2_flex` | Typography and readable text |
 
-The full catalog and per-model reference-image limits are also exposed as the `bfl://models` MCP resource.
+The full catalog, per-model reference-image limits, and the FLUX Tools (`vto`) are also exposed as the `bfl://models` MCP resource.
 
 ---
 
@@ -237,6 +238,11 @@ Add a camel on the sand. Preserve the rest of the composition exactly.
 ```
 Generate a movie poster with the title "MIRAGE" in 1970s grindhouse type,
 high-contrast cyan and orange. Use FLUX.2 [flex].
+```
+
+```
+[attach a selfie]
+Try this on me — a red Nike Tech Fleece hoodie, oversized fit.
 ```
 
 ```
