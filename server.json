@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.black-forest-labs/flux-mcp",
   "title": "FLUX",
-  "description": "Official FLUX MCP server. Generate, edit, vary, try-on, and browse images from Black Forest Labs.",
-  "version": "1.1.0",
+  "description": "Official FLUX MCP server. Generate, edit, vary, try-on, and browse images and videos from Black Forest Labs.",
+  "version": "1.2.0",
   "websiteUrl": "https://docs.bfl.ai/api_integration/mcp_integration",
   "remotes": [
     {
