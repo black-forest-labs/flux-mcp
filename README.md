@@ -12,7 +12,7 @@
 
 <p align="center">
   <strong>Bring FLUX into the tools you already use.</strong><br>
-  Generate, edit, vary, and browse FLUX images from any MCP-compatible client.
+  Generate, edit, vary, and browse FLUX and videos from any MCP-compatible client.
 </p>
 
 <p align="center">
@@ -35,10 +35,11 @@
 
 ---
 
-The **FLUX MCP server** exposes the full FLUX.2 toolkit — text-to-image, image editing, multi-reference composition, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
+The **FLUX MCP server** exposes the full FLUX toolkit — text-to-image, image editing, multi-reference composition, virtual try-on, FLUX 3 video, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, try garments on a photo, animate stills into clips with audio, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
 
 - **Hosted, remote, OAuth-only.** Connect to `https://mcp.bfl.ai`. Sign in with your BFL account, pick the org to bill — done.
 - **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
+- **FLUX 3 video.** Text-to-video, image-to-video from keyframes, and video continuation with synchronized audio, draft previews included.
 - **Built for chat.** Up to 8 images in parallel per prompt. Edit attached images. Browse and reuse history.
 - **You pay BFL directly.** No middleman, no shared quotas. Current rates: [bfl.ai/pricing](https://bfl.ai/pricing).
 
@@ -195,6 +196,9 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | Tool | What it does |
 | --- | --- |
 | `generate_image` | Generate **1–8 images in parallel**. Covers text-to-image, edits, multi-reference composition, style transfer, inpainting-style edits, and outpainting — all through prompts. |
+| `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Preserves face, hair, and pose; only the worn item changes. |
+| `generate_video` | Generate **1–4 videos in parallel** with FLUX 3 — text-to-video, image-to-video from keyframes, or continuation of an existing video. 5–20 seconds, synchronized audio. |
+| `enhance_video` | Re-render a **draft** video at full quality — the same composition, seed, and prompt plan as the draft you picked. |
 | `generate_variations` | Produce N more images **in the same direction** as a previous generation (identified by `request_id`). Defaults to 4, max 8. |
 | `get_history` | List recent generations as a **thumbnail grid** with per-tile Variations / Edit / copy / download actions. Keyset pagination, date filters. |
 | `get_credits` | Return your remaining BFL credit balance. |
@@ -211,7 +215,25 @@ Available on `generate_image`:
 | `flux2_klein_4b` | Fastest option |
 | `flux2_flex` | Typography and readable text |
 
-The full catalog and per-model reference-image limits are also exposed as the `bfl://models` MCP resource.
+The full catalog, per-model reference-image limits, the FLUX Tools (`vto`), and FLUX 3 video are also exposed as the `bfl://models` MCP resource.
+
+### Video
+
+`generate_video` renders 24fps MP4 clips of 5–20 seconds with synchronized audio, up to 4 in parallel per call. Every request uses one of three modes:
+
+| Mode | Input | What you get |
+| --- | --- | --- |
+| `t2v` | Prompt only | A clip generated from your description |
+| `i2v` | Prompt + 1–10 keyframe images | One keyframe animates a still from its exact opening frame; two bridge an opening and a closing frame; 3–10 form a storyboard spread evenly across the clip (explicit `duration` required) |
+| `v2v` | Prompt + a source video | A continuation of the source's final seconds, audio included |
+
+- **Prompts are prose** FLUX 3 reasons about the prompt and plans the generation before rendering — describe the scene, the motion, and the sound. There is no seed or model parameter on video.
+- **Keyframes** reference a prior result (`request_id`), an uploaded image, or a public URL. Optional per-keyframe timestamps (in seconds, ascending — set on all keyframes or none) pin exact positions in the clip; with `duration` set to `auto`, the clip runs to the last timestamp (20 seconds max).
+- **Source videos** for `v2v` are a prior `generate_video` result, an attached MP4 up to 50 MB, or a public MP4 URL.
+- **Format controls.** `duration`: 5–20 seconds or `auto` (default). `aspect_ratio`: `auto` (default), `21:9`, `2:1`, `16:9`, `4:3`, `1:1`, `3:4`, or `9:16`. `resolution`: `hd` (default, 704p-class) or `fhd` (finished by a video upsampler on a 1080p-class canvas). `generate_audio`: on by default.
+- **Drafts are the way to explore.** `draft: true` renders a fast low-step preview of the exact planned generation (`hd` only). Batch cheap drafts, pick the winner, and `enhance_video` re-renders it at full quality from its `request_id`.
+- **Renders take minutes** — long clips up to about an hour. The tool returns immediately with a pending `request_id`; results survive closing the chat and resume automatically.
+- **Reference-based conditioning** (identity and motion references) is not part of the video surface; a dedicated `r2v` mode follows later.
 
 ---
 
@@ -237,6 +259,22 @@ Add a camel on the sand. Preserve the rest of the composition exactly.
 ```
 Generate a movie poster with the title "MIRAGE" in 1970s grindhouse type,
 high-contrast cyan and orange. Use FLUX.2 [flex].
+```
+
+```
+[attach a selfie]
+Try this on me — a red Nike Tech Fleece hoodie, oversized fit.
+```
+
+```
+[attach an image]
+Animate this into a 10-second clip — slow push-in, wind through the palms,
+distant surf.
+```
+
+```
+Generate 3 draft videos of a paper lantern rising over a night market,
+each with a different camera move. I'll enhance the best one.
 ```
 
 ```
@@ -308,12 +346,14 @@ For the full FLUX prompting playbook, see [black-forest-labs/skills](https://git
 
 Large batches, FLUX.2 [max], or complex edits take longer than smaller generations. Visual MCP clients update the image view automatically.
 
+Video renders take minutes — long clips up to about an hour. They return a pending request immediately and resume automatically, even if you close the chat and come back later.
+
 </details>
 
 <details>
-<summary><strong>Attached image editing fails</strong></summary>
+<summary><strong>Attached image or video editing fails</strong></summary>
 
-Your MCP client needs permission to upload attached images to BFL. If your client blocks outbound HTTPS from its sandbox, allow `*.bfl.ai` or pass a public image URL instead.
+Your MCP client needs permission to upload attached media to BFL. If your client blocks outbound HTTPS from its sandbox, allow `*.bfl.ai` or pass a public URL instead. Video uploads are MP4 only, up to 50 MB.
 
 </details>
 
