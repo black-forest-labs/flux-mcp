@@ -249,7 +249,7 @@ The server ships the official [black-forest-labs/skills](https://github.com/blac
 - **Resources** — `bfl://skills/<name>` for clients with resource pickers (Claude, Cursor).
 - **Prompts** — `skill_<name_with_underscores>` slash-prompts where the client supports them (e.g. `skill_flux_image_best_practices`).
 
-Ask *"what FLUX skills do you have?"*, or just request something specialized — a product ad, Super 8 footage, dialogue direction — and the generation tools point your client at the matching guide before it writes the prompt.
+Ask *"what FLUX skills do you have?"*, or just request something specialized like a product ad, Super 8 footage, dialogue direction. The generation tools point your client at the matching guide before it writes the prompt.
 
 ---
 
