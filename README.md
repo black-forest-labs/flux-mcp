@@ -391,7 +391,7 @@ MCP and Agent Skills solve different problems:
 | **What it does** | Generates, edits, varies, and browses images directly in chat | Teaches your coding agent how to write FLUX API code |
 | **Best for** | Creative work inside Claude or another MCP client | Building applications that call the FLUX API |
 
-Use both. They complement each other — and the skills repo's prompting guides are served directly over MCP too (see [Prompting skills](#prompting-skills)).
+Use both. They complement each other and the skills repo's prompting guides are served directly over MCP too (see [Prompting skills](#prompting-skills)).
 
 ---
 
