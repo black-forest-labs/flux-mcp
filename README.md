@@ -42,7 +42,7 @@ The **FLUX MCP server** exposes the full FLUX toolkit — text-to-image, image e
 - **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
 - **FLUX 3 video.** Text-to-video, image-to-video from keyframes, and video continuation with synchronized audio, draft previews included.
 - **Built for chat.** Up to 8 images in parallel per prompt. Edit attached images. Browse and reuse history.
-- **Expert prompting built in.** The official BFL prompting guides ship with the server; your client reads the matching one before writing a hard prompt.
+- **Expert prompting built in.** The official BFL prompting guides let your agent structure complicated prompts for better outputs.
 - **You pay BFL directly.** No middleman, no shared quotas. Current rates: [bfl.ai/pricing](https://bfl.ai/pricing).
 
 ---
