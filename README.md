@@ -25,6 +25,7 @@
   <a href="#install">Install</a> ·
   <a href="#showcase">Showcase</a> ·
   <a href="#tools">Tools</a> ·
+  <a href="#prompting-skills">Skills</a> ·
   <a href="#example-prompts">Examples</a> ·
   <a href="#troubleshooting">Troubleshooting</a>
 </p>
@@ -41,6 +42,7 @@ The **FLUX MCP server** exposes the full FLUX toolkit — text-to-image, image e
 - **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
 - **FLUX 3 video.** Text-to-video, image-to-video from keyframes, and video continuation with synchronized audio, draft previews included.
 - **Built for chat.** Up to 8 images in parallel per prompt. Edit attached images. Browse and reuse history.
+- **Specialist prompting guides.** Official BFL guides cover focused image and FLUX 3 workflows.
 - **You pay BFL directly.** No middleman, no shared quotas. Current rates: [bfl.ai/pricing](https://bfl.ai/pricing).
 
 ---
@@ -202,6 +204,8 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | `generate_variations` | Produce N more images **in the same direction** as a previous generation (identified by `request_id`). Defaults to 4, max 8. |
 | `get_history` | List recent generations as a **thumbnail grid** with per-tile Variations / Edit / copy / download actions. Keyset pagination, date filters. |
 | `get_credits` | Return your remaining BFL credit balance. |
+| `list_skills` | List the official **BFL prompting guides** — image best practices, video direction, audio and dialogue, keyframes, product ads, archival looks, API integration. |
+| `get_skill` | Fetch one guide by name. Long guides return an intro plus a section index; fetch the sections the task needs. |
 
 ### Models
 
@@ -234,6 +238,18 @@ The full catalog, per-model reference-image limits, the FLUX Tools (`vto`), and 
 - **Drafts are the way to explore.** `draft: true` renders a fast low-step preview of the exact planned generation (`hd` only). Batch cheap drafts, pick the winner, and `enhance_video` re-renders it at full quality from its `request_id`.
 - **Renders take minutes** — long clips up to about an hour. The tool returns immediately with a pending `request_id`; results survive closing the chat and resume automatically.
 - **Reference-based conditioning** (identity and motion references) is not part of the video surface; a dedicated `r2v` mode follows later.
+
+---
+
+## Prompting skills
+
+The server ships specialist prompting guides from [black-forest-labs/skills](https://github.com/black-forest-labs/skills) and serves them three ways, so every client gets at least one. These guides cover focused workflows; a general FLUX 3 prompting guide is not included yet:
+
+- **Tools** — `list_skills` and `get_skill(name)`. Works everywhere, including ChatGPT.
+- **Resources** — `bfl://skills/<name>` for clients with resource pickers (Claude, Cursor).
+- **Prompts** — `skill_<name_with_underscores>` slash-prompts where the client supports them (e.g. `skill_flux_image_best_practices`).
+
+Ask *"what FLUX skills do you have?"*, or just request something specialized like a product ad, Super 8 footage, dialogue direction. The generation tools point your client at the matching guide before it writes the prompt.
 
 ---
 
@@ -297,7 +313,7 @@ Show me my recent FLUX generations.
 - **Avoid negative prompts.** FLUX responds to what you describe, not a list of what to avoid.
 - **Iterate from results.** Use Variations for alternatives, or Edit to keep refining a generated image.
 
-For the full FLUX prompting playbook, see [black-forest-labs/skills](https://github.com/black-forest-labs/skills).
+The server exposes specialist guides for focused workflows. A general FLUX 3 prompting guide is not included yet.
 
 ---
 
@@ -375,7 +391,7 @@ MCP and Agent Skills solve different problems:
 | **What it does** | Generates, edits, varies, and browses images directly in chat | Teaches your coding agent how to write FLUX API code |
 | **Best for** | Creative work inside Claude or another MCP client | Building applications that call the FLUX API |
 
-Use both. They complement each other.
+Use both. They complement each other and the skills repo's prompting guides are served directly over MCP too (see [Prompting skills](#prompting-skills)).
 
 ---
 
