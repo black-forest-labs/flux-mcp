@@ -42,7 +42,7 @@ The **FLUX MCP server** exposes the full FLUX toolkit — text-to-image, image e
 - **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
 - **FLUX 3 video.** Text-to-video, image-to-video from keyframes, and video continuation with synchronized audio, draft previews included.
 - **Built for chat.** Up to 8 images in parallel per prompt. Edit attached images. Browse and reuse history.
-- **Expert prompting built in.** The official BFL prompting guides let your agent structure complicated prompts for better outputs.
+- **Specialist prompting guides.** Official BFL guides cover focused image and FLUX 3 workflows.
 - **You pay BFL directly.** No middleman, no shared quotas. Current rates: [bfl.ai/pricing](https://bfl.ai/pricing).
 
 ---
@@ -243,7 +243,7 @@ The full catalog, per-model reference-image limits, the FLUX Tools (`vto`), and 
 
 ## Prompting skills
 
-The server ships the official [black-forest-labs/skills](https://github.com/black-forest-labs/skills) prompting guides and serves them three ways, so every client gets at least one:
+The server ships specialist prompting guides from [black-forest-labs/skills](https://github.com/black-forest-labs/skills) and serves them three ways, so every client gets at least one. These guides cover focused workflows; a general FLUX 3 prompting guide is not included yet:
 
 - **Tools** — `list_skills` and `get_skill(name)`. Works everywhere, including ChatGPT.
 - **Resources** — `bfl://skills/<name>` for clients with resource pickers (Claude, Cursor).
@@ -313,7 +313,7 @@ Show me my recent FLUX generations.
 - **Avoid negative prompts.** FLUX responds to what you describe, not a list of what to avoid.
 - **Iterate from results.** Use Variations for alternatives, or Edit to keep refining a generated image.
 
-The full playbook is built into the server — see [Prompting skills](#prompting-skills).
+The server exposes specialist guides for focused workflows. A general FLUX 3 prompting guide is not included yet.
 
 ---
 
