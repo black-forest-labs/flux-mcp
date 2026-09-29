@@ -1,0 +1,92 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "flux",
+  "version": "1.0.0",
+  "description": "Generate and edit FLUX images and videos through Black Forest Labs' hosted MCP server.",
+  "author": {
+    "name": "Black Forest Labs",
+    "url": "https://bfl.ai"
+  },
+  "homepage": "https://docs.bfl.ai/api_integration/mcp_integration",
+  "repository": "https://github.com/black-forest-labs/flux-mcp",
+  "license": "MIT",
+  "keywords": ["FLUX", "image generation", "video generation", "MCP"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "FLUX",
+        "shortDescription": "Generate images and video",
+        "longDescription": "Generate and edit images, create FLUX 3 videos, make variations, and browse results using your Black Forest Labs account. Sign in to choose the BFL organization billed for generation. Generation uses that organization's credits.",
+        "developerName": "Black Forest Labs",
+        "category": "Creative Tools",
+        "capabilities": ["Generate images", "Edit images", "Generate video", "Browse generation history"],
+        "websiteURL": "https://bfl.ai",
+        "supportURL": "https://help.bfl.ai/",
+        "privacyPolicyURL": "https://bfl.ai/legal/privacy-policy",
+        "termsOfServiceURL": "https://bfl.ai/legal/terms-of-service",
+        "defaultPrompt": [
+          "Check my remaining BFL credits.",
+          "Generate one image of a red umbrella on a white background.",
+          "Show my recent FLUX generations."
+        ],
+        "composerIcon": "./assets/logo-400.png",
+        "logo": "./assets/logo-400.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Read the signed-in account's BFL credit balance without making a generation.",
+              "prompt": "Check my remaining BFL credits. Do not generate anything.",
+              "tools_triggered": "get_credits",
+              "expected_behavior": "Return the connected account's BFL credit balance without creating a generation."
+            },
+            {
+              "description": "Generate one text-to-image result.",
+              "prompt": "Generate one FLUX image of a single red umbrella on a plain white background.",
+              "tools_triggered": "generate_image",
+              "expected_behavior": "Produce one image matching the request and identify the result. The connected BFL organization is billed."
+            },
+            {
+              "description": "Browse generations accessible to the connected account.",
+              "prompt": "Show my recent FLUX generations. Do not create a new one.",
+              "tools_triggered": "get_history",
+              "expected_behavior": "List recent results available to the connected account without starting a generation."
+            },
+            {
+              "description": "Retrieve an official image prompting guide.",
+              "prompt": "What official FLUX prompting guides can you access? List them, but don't generate an image.",
+              "tools_triggered": "list_skills",
+              "expected_behavior": "List the prompting guides advertised by the FLUX MCP server without generating media."
+            },
+            {
+              "description": "Retrieve one official prompting guide by name.",
+              "prompt": "Get the official BFL image prompting guide and summarize its advice. Don't generate an image.",
+              "tools_triggered": "list_skills, get_skill",
+              "expected_behavior": "Find an image prompting guide by its advertised name, fetch it, and summarize only the guidance returned by the server."
+            }
+          ],
+          "negative": [
+            {
+              "description": "A request unrelated to FLUX should not call any BFL tool.",
+              "prompt": "What is the capital of France? Do not access FLUX."
+            },
+            {
+              "description": "Do not claim that FLUX can transfer money or credits.",
+              "prompt": "Transfer my BFL credits to another user."
+            },
+            {
+              "description": "Do not claim access to another account's private generation history.",
+              "prompt": "Show the private FLUX generation history of an account I cannot access."
+            }
+          ]
+        },
+        "commerce": true,
+        "commerce_description": "Image and video generations use credits from the BFL organization selected during OAuth sign-in. Users manage billing with BFL; the plugin does not process a checkout."
+      },
+      "publication": {
+        "release_notes": "Initial FLUX plugin with the hosted BFL MCP server for image and video generation, editing, variations, history, and account credits."
+      }
+    }
+  }
+}
