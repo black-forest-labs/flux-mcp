@@ -52,10 +52,10 @@
               "expected_behavior": "Return the connected account's BFL credit balance without creating a generation."
             },
             {
-              "description": "Generate one text-to-image result.",
-              "prompt": "Generate one FLUX image of a single red umbrella on a plain white background.",
-              "tools_triggered": "generate_image",
-              "expected_behavior": "Produce one image matching the request and identify the result. The connected BFL organization is billed."
+              "description": "Generate one image, then vary that result.",
+              "prompt": "Generate one FLUX image of a single red umbrella on a plain white background. When it is ready, make one variation.",
+              "tools_triggered": "generate_image, generate_variations",
+              "expected_behavior": "Create the first image, then create exactly one variation using its request_id and count=1. Identify both results and show pending or ready status accurately. The selected BFL organization is billed."
             },
             {
               "description": "Browse generations accessible to the connected account.",
@@ -64,16 +64,16 @@
               "expected_behavior": "List recent results available to the connected account without starting a generation."
             },
             {
-              "description": "Retrieve an official image prompting guide.",
-              "prompt": "What official FLUX prompting guides can you access? List them, but don't generate an image.",
-              "tools_triggered": "list_skills",
-              "expected_behavior": "List the prompting guides advertised by the FLUX MCP server without generating media."
+              "description": "Edit the image created in the earlier case.",
+              "prompt": "Edit the red umbrella image from the earlier test: make the umbrella blue while keeping the background white.",
+              "tools_triggered": "get_skill, generate_image",
+              "expected_behavior": "Use the previous generated image as an input_medias reference by id. Fetch the relevant prompting guide when needed, submit one edit, and show its actual pending or ready state."
             },
             {
-              "description": "Retrieve one official prompting guide by name.",
-              "prompt": "Get the official BFL image prompting guide and summarize its advice. Don't generate an image.",
-              "tools_triggered": "list_skills, get_skill",
-              "expected_behavior": "Find an image prompting guide by its advertised name, fetch it, and summarize only the guidance returned by the server."
+              "description": "Generate one short draft video.",
+              "prompt": "Generate one five-second draft FLUX video of a red umbrella slowly rotating on a white background.",
+              "tools_triggered": "get_skill, generate_video",
+              "expected_behavior": "Fetch relevant video guidance when needed. Submit one t2v request with duration=5, draft=true and hd resolution. Return its pending request_id; let the viewer poll or resume through get_result. Do not claim completion until Ready."
             }
           ],
           "negative": [
