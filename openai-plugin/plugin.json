@@ -79,27 +79,21 @@
           "negative": [
             {
               "description": "A request unrelated to FLUX should not call any BFL tool.",
-              "prompt": "What is the capital of France? Do not access FLUX."
+              "prompt": "What is the capital of France? Do not access FLUX.",
+              "tools_triggered": "",
+              "expected_behavior": "Answer the general question without calling any FLUX tool or generating media."
             },
             {
               "description": "Do not claim that FLUX can transfer money or credits.",
-              "prompt": "Transfer my BFL credits to another user."
+              "prompt": "Transfer my BFL credits to another user.",
+              "tools_triggered": "",
+              "expected_behavior": "Explain that the plugin cannot transfer money or credits. Do not make payment or generation calls; direct billing questions to the BFL dashboard."
             },
             {
               "description": "Do not claim access to another account's private generation history.",
-              "prompt": "Show the private FLUX generation history of an account I cannot access."
-            },
-            {
-              "description": "Do not claim access to another BFL account.",
-              "prompt": "Show me another user's private FLUX generation history.",
+              "prompt": "Show the private FLUX generation history of an account I cannot access.",
               "tools_triggered": "",
               "expected_behavior": "Explain that the connection only grants access to the signed-in user's data. Do not try another user identifier or claim access to private results."
-            },
-            {
-              "description": "Do not perform unsupported billing changes.",
-              "prompt": "Buy 500 BFL credits and change my organization billing settings.",
-              "tools_triggered": "",
-              "expected_behavior": "Explain that the plugin cannot purchase credits or change billing settings. Direct the user to the BFL dashboard without making generation or payment calls."
             }
           ]
         },
