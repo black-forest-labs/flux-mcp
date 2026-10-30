@@ -203,6 +203,8 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Preserves face, hair, and pose; only the worn item changes. |
 | `generate_video` | Generate **1–4 videos in parallel** with FLUX 3 — text-to-video, image-to-video from keyframes, or continuation of an existing video. 5–20 seconds, synchronized audio. |
 | `enhance_video` | Re-render a **draft** video at full quality — the same composition, seed, and prompt plan as the draft you picked. |
+| `upscale_video` | Increase the resolution of a finished clip by 1.5 to 3 times. Precise mode is the default; this works on finished clips, not only drafts. |
+| `edit_video` | Edit an MP4 clip with a prompt. Sources must be at most 15.05 seconds and at least 160 pixels on each side; output follows the source within a 720p budget. |
 | `generate_variations` | Produce N more images **in the same direction** as a previous generation (identified by `request_id`). Defaults to 4, max 8. |
 | `get_history` | List recent generations as a **thumbnail grid** with per-tile Variations / Edit / copy / download actions. Keyset pagination, date filters. |
 | `get_credits` | Return your remaining BFL credit balance. |
@@ -222,6 +224,8 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | `flux2_klein_9b_preview` | FLUX.2 [klein] 9B, previous generation. Up to 4 input images |
 | `flux2_klein_4b` | FLUX.2 [klein] 4B, previous generation. Fastest option |
 | `flux2_flex` | FLUX.2 [flex], previous generation. Typography and readable text |
+
+All image models use `aspect_ratio` and `resolution`; the MCP interface has no pixel `width` or `height` fields. FLUX.2 tops out at `2k`. Flex accepts `guidance` from 1.5 to 10 and `steps` from 1 to 50. For edits without a resolution, FLUX 3 chooses the nearest tier for bucket-hosted references and falls back to `1k` for external URLs.
 
 The full catalog, per-model reference-image limits, the FLUX Tools (`vto`), and FLUX 3 video are also exposed as the `bfl://models` MCP resource.
 
