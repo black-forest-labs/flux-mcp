@@ -38,8 +38,10 @@
 
 The **FLUX MCP server** exposes the full FLUX toolkit — text-to-image, image editing, multi-reference composition, virtual try-on, FLUX 3 video, variations, and history — to any client that speaks the [Model Context Protocol](https://modelcontextprotocol.io). Generate options in parallel, edit attached images through prompts, try garments on a photo, animate stills into clips with audio, and branch into variations from any result you like. No API code, no keys pasted into the conversation.
 
-- **Hosted, remote, OAuth-only.** Connect to `https://mcp.bfl.ai`. Sign in with your BFL account, pick the org to bill — done.
-- **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Your client picks the right one for the task.
+- **Hosted, remote, OAuth-only.** Connect to `https://mcp.bfl.ai`. Sign in with your BFL account, pick the org to bill, done.
+- **FLUX 3 Image, the default.** Text-to-image, single-reference edits, and multi-reference composition, sized with `aspect_ratio` and `resolution`.
+- **FLUX 3 Image Klein.** The fast, cheap model in the same family, for volume work and repeatable output with `seed`, `steps` and `output_format`.
+- **Every FLUX.2 model.** Pro, Max, Klein (4B & 9B), Flex. Still selectable when you want the previous generation.
 - **FLUX 3 video.** Text-to-video, image-to-video from keyframes, and video continuation with synchronized audio, draft previews included.
 - **Built for chat.** Up to 8 images in parallel per prompt. Edit attached images. Browse and reuse history.
 - **Specialist prompting guides.** Official BFL guides cover focused image and FLUX 3 workflows.
@@ -197,10 +199,12 @@ Your client picks which tool to call based on your prompt — you don't need to 
 
 | Tool | What it does |
 | --- | --- |
-| `generate_image` | Generate **1–8 images in parallel**. Covers text-to-image, edits, multi-reference composition, style transfer, inpainting-style edits, and outpainting — all through prompts. |
+| `generate_image` | Generate **1–8 images in parallel**. Covers text-to-image, edits, multi-reference composition, style transfer, and inpainting-style edits through prompts. |
 | `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Preserves face, hair, and pose; only the worn item changes. |
 | `generate_video` | Generate **1–4 videos in parallel** with FLUX 3 — text-to-video, image-to-video from keyframes, or continuation of an existing video. 5–20 seconds, synchronized audio. |
 | `enhance_video` | Re-render a **draft** video at full quality — the same composition, seed, and prompt plan as the draft you picked. |
+| `upscale_video` | Increase the resolution of a finished clip by 1.5 to 3 times. Precise mode is the default; this works on finished clips, not only drafts. |
+| `edit_video` | Edit an MP4 clip with a prompt. Sources must be at most 15.05 seconds and at least 160 pixels on each side; output follows the source within a 720p budget. |
 | `generate_variations` | Produce N more images **in the same direction** as a previous generation (identified by `request_id`). Defaults to 4, max 8. |
 | `get_history` | List recent generations as a **thumbnail grid** with per-tile Variations / Edit / copy / download actions. Keyset pagination, date filters. |
 | `get_credits` | Return your remaining BFL credit balance. |
@@ -209,15 +213,19 @@ Your client picks which tool to call based on your prompt — you don't need to 
 
 ### Models
 
-Available on `generate_image`:
+`generate_image` defaults to `flux3_image`. Pass `model` to pick another one:
 
 | Model | Use it for |
 | --- | --- |
-| `flux2_pro_preview` *(default)* | Everyday work — best balance of quality and speed |
-| `flux2_max` | Hero shots, final assets — highest quality |
-| `flux2_klein_9b_preview` | Faster iterations, up to 4 input images |
-| `flux2_klein_4b` | Fastest option |
-| `flux2_flex` | Typography and readable text |
+| `flux3_image` *(default)* | FLUX 3 Image. Text-to-image, edits, multi-reference composition. `resolution`: `768sq`, `1k` (default), `1.5k`, `2k`, `4k`. `aspect_ratio`: `auto` or one of 15 fixed ratios. Up to 10 reference images. |
+| `flux3_image_klein` | FLUX 3 Image Klein. Fast and cheap at the same sizes and reference limit, with `seed` (0 to 4294967295), `steps` (1 to 16, 16 is the default) and `output_format` (`jpeg` or `png`). |
+| `flux2_pro_preview` | FLUX.2 [pro], previous generation. Everyday work |
+| `flux2_max` | FLUX.2 [max], previous generation. Hero shots, final assets |
+| `flux2_klein_9b_preview` | FLUX.2 [klein] 9B, previous generation. Up to 4 input images |
+| `flux2_klein_4b` | FLUX.2 [klein] 4B, previous generation. Fastest option |
+| `flux2_flex` | FLUX.2 [flex], previous generation. Typography and readable text |
+
+All image models use `aspect_ratio` and `resolution`; the MCP interface has no pixel `width` or `height` fields. FLUX.2 tops out at `2k`. Flex accepts `guidance` from 1.5 to 10 and `steps` from 1 to 50. For edits without a resolution, FLUX 3 chooses the nearest tier for bucket-hosted references and falls back to `1k` for external URLs.
 
 The full catalog, per-model reference-image limits, the FLUX Tools (`vto`), and FLUX 3 video are also exposed as the `bfl://models` MCP resource.
 
