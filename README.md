@@ -200,7 +200,7 @@ Your client picks which tool to call based on your prompt — you don't need to 
 | Tool | What it does |
 | --- | --- |
 | `generate_image` | Generate **1–8 images in parallel**. Covers text-to-image, edits, multi-reference composition, style transfer, and inpainting-style edits through prompts. |
-| `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Preserves face, hair, and pose; only the worn item changes. |
+| `vto` | **Virtual try-on** — dress a person (or pet) in a garment, hat, sunglasses, shoes, bag, or any wearable from a reference image. Designed to preserve the subject's face, hair, and pose while changing the wearable. |
 | `generate_video` | Generate **1–4 videos in parallel** with FLUX 3 — text-to-video, image-to-video from keyframes, or continuation of an existing video. 5–20 seconds, synchronized audio. |
 | `enhance_video` | Re-render a **draft** video at full quality — the same composition, seed, and prompt plan as the draft you picked. |
 | `upscale_video` | Increase the resolution of a finished clip by 1.5 to 3 times. Precise mode is the default; this works on finished clips, not only drafts. |
