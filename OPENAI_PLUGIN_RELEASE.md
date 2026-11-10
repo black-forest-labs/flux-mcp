@@ -2,6 +2,8 @@
 
 The package lives in `openai-plugin/`. ZIP that directory's contents so `plugin.json`, `mcp.json`, and `assets/` are at the archive root. Do not include this release guide or credentials in the ZIP.
 
+The `OpenAI plugin package` workflow (`.github/workflows/openai-plugin-package.yml`) does this on every change to `openai-plugin/`: it validates both manifests against their declared schemas, checks asset paths, and uploads the ZIP plus `package-info.json` (version, source commit, SHA-256) as a run artifact. Use that ZIP rather than zipping by hand; the review cases and the portal upload stay manual.
+
 ## Code and package
 
 - Merge the image release and public README changes first.
