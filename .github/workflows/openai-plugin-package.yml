@@ -1,0 +1,81 @@
+name: OpenAI plugin package
+
+# Validates openai-plugin/ and builds the ZIP the OpenAI portal takes, as a
+# workflow artifact. Uploading it, running the review cases and submitting
+# stay manual (OPENAI_PLUGIN_RELEASE.md). Hosted MCP tool changes need no
+# new ZIP: OpenAI rescans mcp.bfl.ai itself.
+
+on:
+  pull_request:
+    paths:
+      - "openai-plugin/**"
+      - "scripts/package_openai_plugin.py"
+      - ".github/workflows/openai-plugin-package.yml"
+  push:
+    branches: [main]
+    paths:
+      - "openai-plugin/**"
+      - "scripts/package_openai_plugin.py"
+      - ".github/workflows/openai-plugin-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install jsonschema
+        run: pip install jsonschema==4.26.0
+
+      - name: Validate and build the ZIP
+        id: build
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+        run: |
+          python3 scripts/package_openai_plugin.py --out dist ${BASE_REF:+--base-ref "$BASE_REF"}
+          echo "name=$(jq -r '.zip | rtrimstr(".zip")' dist/package-info.json)" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r .version dist/package-info.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the package
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.name }}
+          path: dist/
+          if-no-files-found: error
+
+      # Push to main only: fork PRs never see secrets.
+      - name: Notify Discord
+        if: github.event_name == 'push'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_MCP_RELEASES_WEBHOOK_URL }}
+          DISCORD_MENTION_USER_ID: ${{ vars.DISCORD_MCP_NOTIFY_USER_ID }}
+          VERSION: ${{ steps.build.outputs.version }}
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "::notice::DISCORD_WEBHOOK_URL is not set; skipping the Discord notification."
+            exit 0
+          fi
+          if ! printf '%s' "$DISCORD_MENTION_USER_ID" | grep -Eq '^[0-9]{15,21}$'; then
+            DISCORD_MENTION_USER_ID=""
+          fi
+          message="FLUX OpenAI plugin package $VERSION built from ${GITHUB_SHA::7}: $ARTIFACT_URL
+          Manual: run the review cases, then upload the ZIP in the OpenAI portal (Metadata & Skills)."
+          jq -n --arg msg "$message" --arg user "$DISCORD_MENTION_USER_ID" '{
+            content: (if $user == "" then $msg else "<@\($user)> \($msg)" end),
+            allowed_mentions: {parse: [], users: (if $user == "" then [] else [$user] end)}
+          }' | curl -fsS -X POST -H "Content-Type: application/json" \
+            -H "User-Agent: DiscordBot (https://github.com/black-forest-labs/flux-mcp, 1)" \
+            --data @- "$DISCORD_WEBHOOK_URL"
