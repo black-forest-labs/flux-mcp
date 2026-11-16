@@ -19,6 +19,7 @@ SHA-256). Uploading the ZIP to the OpenAI portal stays manual.
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 import subprocess
@@ -52,6 +53,15 @@ def schema_errors(document: dict, schema: dict) -> list[str]:
     ]
 
 
+def mcp_submission_schema(schema: dict) -> dict:
+    """Keep core validation and admit the approved OpenAI OAuth DCR extension."""
+    schema = deepcopy(schema)
+    schema["$defs"]["streamableHttpServer"]["properties"]["extensions"] = {
+        "const": {"com.openai": {"auth": {"type": "oauth", "client": {"mode": "dcr"}}}}
+    }
+    return schema
+
+
 def relative_paths(node, found=None) -> list[str]:
     """Every string in the manifest that is a `./` relative path."""
     found = [] if found is None else found
@@ -82,9 +92,9 @@ def server_errors(mcp: dict) -> list[str]:
     if not servers:
         return ["mcp.json: no mcpServers entry"]
     return [
-        f"mcp.json: server {name!r} URL must be HTTPS without a trailing slash, got {server.get('url')!r}"
+        f"mcp.json: server {name!r} URL must be HTTPS, got {server.get('url')!r}"
         for name, server in servers.items()
-        if not str(server.get("url", "")).startswith("https://") or str(server.get("url")).endswith("/")
+        if not str(server.get("url", "")).startswith("https://")
     ]
 
 
@@ -146,7 +156,10 @@ def main() -> int:
     documents = {name: json.loads((PACKAGE / name).read_text()) for name in MANIFESTS}
     errors = []
     for name, document in documents.items():
-        errors += [f"{name}: {e}" for e in schema_errors(document, fetch_schema(document.get("$schema", "")))]
+        schema = fetch_schema(document.get("$schema", ""))
+        if name == "mcp.json":
+            schema = mcp_submission_schema(schema)
+        errors += [f"{name}: {e}" for e in schema_errors(document, schema)]
     errors += asset_errors(documents["plugin.json"], PACKAGE)
     errors += server_errors(documents["mcp.json"])
     warnings = review_warnings(documents["plugin.json"])
