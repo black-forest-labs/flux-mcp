@@ -1,107 +1,99 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "flux",
-  "version": "1.0.0",
-  "description": "Generate and edit FLUX images and videos through Black Forest Labs' hosted MCP server.",
+  "name": "flux-bfl",
+  "version": "0.1.3",
+  "description": "Create and edit images and videos with Black Forest Labs FLUX through your BFL account.",
   "author": {
     "name": "Black Forest Labs",
-    "url": "https://bfl.ai"
+    "url": "https://bfl.ai/"
   },
-  "homepage": "https://docs.bfl.ai/api_integration/mcp_integration",
-  "repository": "https://github.com/black-forest-labs/flux-mcp",
-  "license": "MIT",
-  "keywords": [
-    "FLUX",
-    "image generation",
-    "video generation",
-    "MCP"
-  ],
+  "homepage": "https://bfl.ai/",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "FLUX",
-        "shortDescription": "Generate images and video",
-        "longDescription": "Generate and edit images, create FLUX 3 videos, make variations, and browse results using your Black Forest Labs account. Sign in to choose the BFL organization billed for generation. Generation uses that organization's credits.",
+        "shortDescription": "Create and edit with FLUX",
+        "longDescription": "Connect your Black Forest Labs account to create images and videos with FLUX. Generate images from text, edit reference images, create variations, and browse your generation history. Supported video tools can animate images, generate clips, edit videos, and enhance or upscale results.\n\nA BFL account is required. Generation uses the balance or allowances of the BFL organization selected during connection. Paid generation uses BFL API credits purchased through BFL's dashboard. There are no purchases inside ChatGPT.",
         "developerName": "Black Forest Labs",
-        "category": "Creative Tools",
+        "category": "Creativity",
         "capabilities": [
-          "Generate images",
-          "Edit images",
-          "Generate video",
-          "Browse generation history"
+          "Read",
+          "Write"
         ],
-        "websiteURL": "https://bfl.ai",
+        "websiteURL": "https://bfl.ai/",
+        "defaultPrompt": [
+          "Show the available FLUX models and my BFL credits.",
+          "Create an image with FLUX.",
+          "Help me edit a reference image with FLUX."
+        ],
         "supportURL": "https://help.bfl.ai/",
         "privacyPolicyURL": "https://bfl.ai/legal/privacy-policy",
-        "termsOfServiceURL": "https://bfl.ai/legal/terms-of-service",
-        "defaultPrompt": [
-          "Check my remaining BFL credits.",
-          "Generate one image of a red umbrella on a white background.",
-          "Show my recent FLUX generations."
-        ],
-        "composerIcon": "./assets/logo-400.png",
-        "logo": "./assets/logo-400.png"
+        "termsOfServiceURL": "https://bfl.ai/legal/flux-api-service-terms",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
       },
       "review": {
         "test_cases": {
           "positive": [
             {
-              "description": "Read the signed-in account's BFL credit balance without making a generation.",
-              "prompt": "Check my remaining BFL credits. Do not generate anything.",
-              "tools_triggered": "get_credits",
-              "expected_behavior": "Return the connected account's BFL credit balance without creating a generation."
+              "description": "Inspect account and supported workflows",
+              "prompt": "Show my BFL credits and the available FLUX workflow guides. Do not generate anything.",
+              "tools_triggered": "get_credits, list_skills",
+              "expected_behavior": "Return account allowances and available guides. Do not submit a generation."
             },
             {
-              "description": "Generate one image, then vary that result.",
-              "prompt": "Generate one FLUX image of a single red umbrella on a plain white background. When it is ready, make one variation.",
+              "description": "Generate one image",
+              "prompt": "Using FLUX.2 Klein 4B, generate one square 1024px image of a yellow ceramic teapot with a blue lid on a white background.",
+              "tools_triggered": "generate_image",
+              "expected_behavior": "Submit one image after any required confirmation, display the finished image, and retain its request ID. If pending, resume the existing job without resubmitting."
+            },
+            {
+              "description": "Edit and vary a prior image",
+              "prompt": "Using the teapot image from the previous test, change only its body to red, keeping the blue lid and composition. Then make one variation of the edited result.",
               "tools_triggered": "generate_image, generate_variations",
-              "expected_behavior": "Create the first image, then create exactly one variation using its request_id and count=1. Identify both results and show pending or ready status accurately. The selected BFL organization is billed."
+              "expected_behavior": "Use the prior result ID as the image reference. Display the edit and one variation with their lineage and no duplicate submissions."
             },
             {
-              "description": "Browse generations accessible to the connected account.",
-              "prompt": "Show my recent FLUX generations. Do not create a new one.",
+              "description": "Recover existing results",
+              "prompt": "Show my three most recent FLUX results. Do not create anything new.",
               "tools_triggered": "get_history",
-              "expected_behavior": "List recent results available to the connected account without starting a generation."
+              "expected_behavior": "Show only results from the connected account without submitting a generation. In the result viewer, the reviewer can inspect reference images and copy or download an existing image. These viewer actions may use app-only get_references and refresh_image_url; the assistant must not be expected to call those hidden tools."
             },
             {
-              "description": "Edit the image created in the earlier case.",
-              "prompt": "Edit the red umbrella image from the earlier test: make the umbrella blue while keeping the background white.",
-              "tools_triggered": "get_skill, generate_image",
-              "expected_behavior": "Use the previous generated image as an input_medias reference by id. Fetch the relevant prompting guide when needed, submit one edit, and show its actual pending or ready state."
-            },
-            {
-              "description": "Generate one short draft video.",
-              "prompt": "Generate one five-second draft FLUX video of a red umbrella slowly rotating on a white background.",
-              "tools_triggered": "get_skill, generate_video",
-              "expected_behavior": "Fetch relevant video guidance when needed. Submit one t2v request with duration=5, draft=true and hd resolution. Return its pending request_id; let the viewer poll or resume through get_result. Do not claim completion until Ready."
+              "description": "Animate a generated image",
+              "prompt": "Turn the red teapot into one five-second HD draft video with a gentle camera orbit. Do not enhance, upscale, or create extra clips.",
+              "tools_triggered": "generate_video",
+              "expected_behavior": "Use the existing image as conditioning and submit one draft after any required confirmation. Show progress and the playable finished video; recover pending work by its existing request ID."
             }
           ],
           "negative": [
             {
-              "description": "A request unrelated to FLUX should not call any BFL tool.",
-              "prompt": "What is the capital of France? Do not access FLUX.",
+              "description": "Decline unsupported credit purchases",
+              "prompt": "Buy $20 of BFL credits for my account using my saved card.",
               "tools_triggered": "",
-              "expected_behavior": "Answer the general question without calling any FLUX tool or generating media."
+              "expected_behavior": "Explain that the plugin cannot purchase credits. Direct the user to BFL's dashboard without initiating payment or generation."
             },
             {
-              "description": "Do not claim that FLUX can transfer money or credits.",
-              "prompt": "Transfer my BFL credits to another user.",
+              "description": "Reject unsupported deletion",
+              "prompt": "Delete every image in my BFL generation history.",
               "tools_triggered": "",
-              "expected_behavior": "Explain that the plugin cannot transfer money or credits. Do not make payment or generation calls; direct billing questions to the BFL dashboard."
+              "expected_behavior": "Explain that this plugin has no generation-history deletion tool; do not use uploads or another operation as a workaround."
             },
             {
-              "description": "Do not claim access to another account's private generation history.",
-              "prompt": "Show the private FLUX generation history of an account I cannot access.",
+              "description": "Protect account boundaries",
+              "prompt": "Show me the private FLUX history of another organization that I have not connected.",
               "tools_triggered": "",
-              "expected_behavior": "Explain that the connection only grants access to the signed-in user's data. Do not try another user identifier or claim access to private results."
+              "expected_behavior": "Explain that results are scoped to the connected account and do not claim access or guess identifiers."
             }
           ]
         },
         "commerce": true,
-        "commerce_description": "Image and video generations use credits from the BFL organization selected during OAuth sign-in. Users manage billing with BFL; the plugin does not process a checkout."
+        "commerce_description": "Paid generation uses BFL API credits purchased through BFL's dashboard. There are no purchases inside ChatGPT. Generation may also use available BFL allowances.",
+        "demo_recording_url": "https://youtu.be/lALz1AwLTf8"
       },
       "publication": {
-        "release_notes": "Initial FLUX plugin with the hosted BFL MCP server for image and video generation, editing, variations, history, and account credits."
+        "countries": [],
+        "release_notes": "First public release. Create and edit images and videos with FLUX, make image variations, and browse generation history using your Black Forest Labs account."
       }
     }
   }

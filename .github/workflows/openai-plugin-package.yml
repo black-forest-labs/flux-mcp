@@ -10,12 +10,14 @@ on:
     paths:
       - "openai-plugin/**"
       - "scripts/package_openai_plugin.py"
+      - "scripts/test_package_openai_plugin.py"
       - ".github/workflows/openai-plugin-package.yml"
   push:
     branches: [main]
     paths:
       - "openai-plugin/**"
       - "scripts/package_openai_plugin.py"
+      - "scripts/test_package_openai_plugin.py"
       - ".github/workflows/openai-plugin-package.yml"
   workflow_dispatch:
 
@@ -37,6 +39,9 @@ jobs:
 
       - name: Install jsonschema
         run: pip install jsonschema==4.26.0
+
+      - name: Test package validation
+        run: python3 -m unittest discover -s scripts -p 'test_package_openai_plugin.py'
 
       - name: Validate and build the ZIP
         id: build
