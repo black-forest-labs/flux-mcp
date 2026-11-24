@@ -26,6 +26,7 @@ import subprocess
 import sys
 import zipfile
 from pathlib import Path
+from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,7 +64,7 @@ def mcp_submission_schema(schema: dict) -> dict:
 
 
 def relative_paths(node, found=None) -> list[str]:
-    """Every string in the manifest that is a `./` relative path."""
+    """Every string in the manifest that is a `./` or `../` relative path."""
     found = [] if found is None else found
     if isinstance(node, dict):
         for value in node.values():
@@ -71,20 +72,33 @@ def relative_paths(node, found=None) -> list[str]:
     elif isinstance(node, list):
         for value in node:
             relative_paths(value, found)
-    elif isinstance(node, str) and node.startswith("./"):
+    elif isinstance(node, str) and node.startswith(("./", "../")):
         found.append(node)
     return found
 
 
 def asset_errors(plugin: dict, package: Path) -> list[str]:
     errors = []
+    packaged = {path.resolve() for path in package_files(package)}
     for reference in relative_paths(plugin):
         target = (package / reference).resolve()
         if package.resolve() not in target.parents:
             errors.append(f"{reference}: points outside openai-plugin/")
         elif not target.is_file():
             errors.append(f"{reference}: file not found")
+        elif target not in packaged:
+            errors.append(f"{reference}: not included in the ZIP (only plugin.json, mcp.json and assets/ are packaged)")
     return errors
+
+
+def is_https_url(value) -> bool:
+    if not isinstance(value, str):
+        return False
+    try:
+        parts = urlsplit(value)
+        return parts.scheme == "https" and bool(parts.hostname)
+    except ValueError:
+        return False
 
 
 def server_errors(mcp: dict) -> list[str]:
@@ -94,7 +108,7 @@ def server_errors(mcp: dict) -> list[str]:
     return [
         f"mcp.json: server {name!r} URL must be HTTPS, got {server.get('url')!r}"
         for name, server in servers.items()
-        if not str(server.get("url", "")).startswith("https://")
+        if not is_https_url(server.get("url"))
     ]
 
 
@@ -108,8 +122,16 @@ def review_warnings(plugin: dict) -> list[str]:
 
 
 def package_files(package: Path) -> list[Path]:
+    """plugin.json, mcp.json and the regular, non-hidden files under assets/."""
     files = [package / name for name in MANIFESTS]
-    files += sorted(p for p in (package / "assets").rglob("*") if p.is_file() and not p.name.startswith("."))
+    assets = package / "assets"
+    files += sorted(
+        path
+        for path in assets.rglob("*")
+        if path.is_file()
+        and not path.is_symlink()
+        and not any(part.startswith(".") for part in path.relative_to(assets).parts)
+    )
     return files
 
 
